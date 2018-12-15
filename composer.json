@@ -1,43 +1,43 @@
 {
     "name": "vongola12324/laravel-color-hash",
-    "description": "PHP Port of ColorHash Javascript Library for Laravel",
+    "description": "ColorHash Library for Laravel 5.0+",
     "type": "library",
     "license": "MIT",
     "keywords":[
-	"laravel", "color", "hash"
+	    "laravel", "color", "hash"
     ],
     "homepage": "https://github.com/vongola12324/laravel-color-hash",
     "authors": [
-	{
-	    "name": "Vongola",
-	    "email": "vongola12324@coder.tw"
-	}
+        {
+            "name": "Vongola",
+            "email": "vongola12324@coder.tw"
+        }
     ],
     "require": {
-		"php": ">7.0",
-		"ext-bcmath": "*",
-		"illuminate/support":"^5.0"
+        "php": ">7.0",
+        "ext-bcmath": "*",
+        "illuminate/support":"^5.0"
     },
     "require-dev": {
-		"phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^7.0"
     },
      "scripts": {
-		"test": "phpunit"
+        "test": "phpunit"
      },
     "autoload": {
-		"psr-4": {
-			"Vongola\\ColorHash\\": "src/"
-		}
+        "psr-4": {
+            "Vongola\\ColorHash\\": "src/"
+        }
     },
     "extra": {
-		"component": "package",
-		"laravel": {
-			"providers": [
-				"Vongola\\ColorHash\\ColorHashServiceProvider"
-			],
-			"aliases": {
-				"ColorHash": "Vongola\\ColorHash\\Facades\\ColorHashFacade"
-			}
-		}
+        "component": "package",
+        "laravel": {
+            "providers": [
+                "Vongola\\ColorHash\\ColorHashServiceProvider"
+            ],
+            "aliases": {
+                "ColorHash": "Vongola\\ColorHash\\Facades\\ColorHashFacade"
+            }
+        }
     }
 }
