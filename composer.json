@@ -20,7 +20,10 @@
     "require-dev": {
 	"phpunit/phpunit": "^7.0"
     },
-     "scripts": {
+    "provide": {
+	"shahonseven/php-color-hash": "dev-master"
+    },
+    "scripts": {
 	"test": "phpunit"
      },
     "autoload": {
