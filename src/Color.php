@@ -4,7 +4,7 @@ namespace Vongola\ColorHash;
 
 class Color
 {
-    private $hasher, $customHue, $customLightness, $customSaturation;
+    private $hasher, $customHashFunction, $customHue, $customLightness, $customSaturation;
 
 
     /**
@@ -13,6 +13,7 @@ class Color
     public function __construct()
     {
         $this->hasher = new Hasher();
+        $this->customHashFunction = null;
         $this->customHue = [];
         $this->customLightness = [0.35, 0.5, 0.65];
         $this->customSaturation = [0.35, 0.5, 0.65];
@@ -24,28 +25,36 @@ class Color
      */
     public function custom($options = [])
     {
+        // Custom hash function
+        if (array_key_exists('hash', $options)) {
+            $this->customHashFunction = $options['hash'];
+        }
+
         // Custom lightness
         if (array_key_exists('lightness', $options)) {
-            $L = $options['lightness'] || [0.35, 0.5, 0.65];
-            $this->customLightness = is_array($L) ? $L : [$L];
+            $this->customLightness = is_array($options['lightness']) ? $options['lightness'] : [$options['lightness']];
         }
+
 
         // Custom saturation
         if (array_key_exists('saturation', $options)) {
-            $S = $options['saturation'] || [0.35, 0.5, 0.65];
-            $this->customSaturation = is_array($S) ? $S : [$S];
+            $this->customSaturation = is_array($options['saturation']) ? $options['saturation'] : [$options['saturation']];
         }
 
         // Custom Hue
         if (array_key_exists('hue', $options)) {
             $H = $options['hue'];
-            if (is_numeric($H)) {
-                $this->customHue = ['min' => $H, 'max' => $H];
+            if (is_integer($H) || is_double($H)) {
+                $this->customHue = [['min' => $H, 'max' => $H]];
             } else {
-                $this->customHue = $H;
+                if (isset($H[0])) {
+                    $this->customHue = $H;
+                } else {
+                    $this->customHue = [$H];
+                }
             }
         }
-        if (!empty($this->customHue)) {
+        if (count($this->customHue) > 0) {
             $this->customHue = array_map(function ($range) {
                 return [
                     'min' => array_key_exists('min', $range) ? $range['min'] : 0,
@@ -64,7 +73,7 @@ class Color
      */
     public function hsl($string)
     {
-        $hash = $this->hasher->hash($string);
+        $hash = $this->hasher->hash($string, $this->customHashFunction);
         if (!empty($this->customHue)) {
             $range = $this->customHue[intval(bcmod($hash, strval(count($this->customHue))))];
             $hueResolution = "727";
@@ -72,13 +81,12 @@ class Color
         } else {
             $H = bcmod($hash, "359");
         }
-        $H = intval($H);
         $hash = Util::parseInt(bcdiv($hash, "360"));
         $S = $this->customSaturation[intval(bcmod($hash, strval(count($this->customSaturation))))];
         $hash = Util::parseInt(bcdiv($hash, strval(count($this->customSaturation))));
         $L = $this->customLightness[intval(bcmod($hash, strval(count($this->customLightness))))];
 
-        return [$H, $S, $L];
+        return [is_integer($H) ? intval($H) : floatval($H), $S, $L];
     }
 
     /**
@@ -132,7 +140,7 @@ class Color
             } else {
                 $color = $p;
             }
-            return round($color * 255);
+            return intval(round($color * 255));
         }, [$H + 1 / 3, $H, $H - 1 / 3]);
     }
 

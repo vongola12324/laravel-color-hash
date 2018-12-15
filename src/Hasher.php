@@ -6,9 +6,23 @@ class Hasher
 {
     /**
      * @param $string
+     * @param null|\Closure $hashFunc
      * @return bool|string
      */
-    public function hash($string)
+    public function hash($string, $hashFunc = null)
+    {
+        if ($hashFunc === null) {
+            return $this->_hash($string);
+        } else {
+            return $hashFunc($string);
+        }
+    }
+
+    /**
+     * @param $string
+     * @return bool|string
+     */
+    private function _hash($string)
     {
         $seed = "131";
         $seed2 = "137";

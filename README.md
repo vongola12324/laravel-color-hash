@@ -7,21 +7,45 @@ PHP Port of ColorHash Javascript Library for Laravel.
 composer require vongola12324/laravel-color-hash
 ```
 ## Usage
+### Basic
 ```php
 // in HSL, Hue ∈ [0, 360), Saturation ∈ [0, 1], Lightness ∈ [0, 1]
-ColorHash::hsl('Hello World'); // [158, 0.65, 0.5]
+ColorHash::hsl('Hello World'); // [225, 0.35, 0.65]
 
 // in RGB, R, G, B ∈ [0, 255]
-ColorHash::rgb('Hello World'); // [45, 210, 150]
+ColorHash::rgb('Hello World'); // [135, 150, 197]
 
 // in HEX
-ColorHash::hex('Hello World'); // '#2dd296'
+ColorHash::hex('Hello World'); // '#8796c5'
 ```  
-**Warning: The results are different from the results of original package, see the [issue#2](https://github.com/shahonseven/php-color-hash/issues/2) of original package.**
+### Custom
+```php
+// Custom Hash Function
+$hashFunc = function ($string) {
+    $hash = 0;
+    for ($i = 0; $i < strlen($string); $i++) {
+        $hash += ord($string[$i]);
+    }
+    return $hash;
+}
+ColorHash::custom(['hash' => $hashFunc])->rgb('Hello World'); // [147, 31, 82]
 
-## Notice
-This is a wrapped version of [shahonseven/php-color-hash](https://github.com/shahonseven/php-color-hash) for laravel 5.0+.  
-If you have any question, please use the issue tracker. 
+// Custom Hue
+ColorHash::custom(['hue' => 90])->rgb('Hello World'); // [166, 197, 135]
+ColorHash::custom(['hue' => ['min' => 90, 'max' => 270]])->rgb('Hello World'); // [135, 173, 197]
+ColorHash::custom(['hue' => [['min' => 30, 'max' => 90], ['min' => 180, 'max' => 210], ['min' => 270, 'max' => 285]]])->rgb('Hello World'); // [179, 135, 197]
+
+// Custom Lightness
+ColorHash::custom(['lightness' => 0.5])->rgb('Hello World'); // Broken, don't use it
+ColorHash::custom(['lightness' => [0.35, 0.5, 0.65]])->rgb('Hello World'); // [135, 150, 197]
+
+// Custom Saturation
+ColorHash::custom(['saturation' => 0.5])->rgb('Hello World'); // Broken, don't use it
+ColorHash::custom(['saturation' => [0.35, 0.5, 0.65]])->rgb('Hello World'); // [135, 150, 197]
+```
+
+>  The results of CustomLightness and CustomSaturation is wrong when there is only one parameter of them.  
+> I'm not sure why did that happened.  This might be fixed in later release.
 
 ## License
 MIT. 
