@@ -44,8 +44,8 @@ ColorHash::custom(['saturation' => 0.5])->rgb('Hello World'); // Broken, don't u
 ColorHash::custom(['saturation' => [0.35, 0.5, 0.65]])->rgb('Hello World'); // [135, 150, 197]
 ```
 
->  The results of CustomLightness and CustomSaturation is wrong when there is only one parameter of them.  
-> I'm not sure why did that happened.  This might be fixed in later release.
+> **The results of CustomLightness and CustomSaturation is wrong when there is only one parameter of them.**    
+> **I'm not sure why did that happened.  This might be fixed in later release.**
 
 ## License
 MIT. 
