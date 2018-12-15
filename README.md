@@ -1,5 +1,6 @@
 # laravel-color-hash
-PHP Port of ColorHash Javascript Library for Laravel
+![](https://travis-ci.org/vongola12324/laravel-color-hash.svg?branch=master)  
+PHP Port of ColorHash Javascript Library for Laravel.
 
 ## Installation
 ```bash
