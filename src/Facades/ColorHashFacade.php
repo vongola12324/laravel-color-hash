@@ -7,6 +7,6 @@ class ColorHashFacade extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \Vongola\ColorHash\ColorHash::class;
+        return \Vongola\ColorHash\Color::class;
     }
 }

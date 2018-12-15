@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9447a6f724b5b161244c9377c1436008",
+    "content-hash": "1e69f94773eb5fa927193a7974116789",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -330,42 +330,6 @@
                 "simple-cache"
             ],
             "time": "2017-10-23T01:57:42+00:00"
-        },
-        {
-            "name": "shahonseven/php-color-hash",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/shahonseven/php-color-hash.git",
-                "reference": "82e555cb75558704d1537a9dc4ea3d2d898a84e5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/shahonseven/php-color-hash/zipball/82e555cb75558704d1537a9dc4ea3d2d898a84e5",
-                "reference": "82e555cb75558704d1537a9dc4ea3d2d898a84e5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Shahonseven": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Shahril Abdullah",
-                    "email": "shahonseven@gmail.com"
-                }
-            ],
-            "description": "Generate color based on the given string. Backported from the Javascript library color-hash",
-            "time": "2018-11-30T09:26:21+00:00"
         },
         {
             "name": "symfony/contracts",
@@ -1980,9 +1944,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "shahonseven/php-color-hash": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

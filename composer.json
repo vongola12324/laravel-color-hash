@@ -14,29 +14,30 @@
 	}
     ],
     "require": {
-	"shahonseven/php-color-hash": "dev-master#82e555cb75558704d1537a9dc4ea3d2d898a84e5",
-	"illuminate/support":"^5.0"
+		"php": ">7.0",
+		"ext-bcmath": "*",
+		"illuminate/support":"^5.0"
     },
     "require-dev": {
-	"phpunit/phpunit": "^7.0"
+		"phpunit/phpunit": "^7.0"
     },
      "scripts": {
-	"test": "phpunit"
+		"test": "phpunit"
      },
     "autoload": {
-	"psr-4": {
-	    "Vongola\\ColorHash\\": "src/"
-	}
+		"psr-4": {
+			"Vongola\\ColorHash\\": "src/"
+		}
     },
     "extra": {
-	"component": "package",
-	"laravel": {
-	    "providers": [
-		"Vongola\\ColorHash\\ColorHashServiceProvider"
-	    ],
-	    "aliases": {
-		"ColorHash": "Vongola\\ColorHash\\Facades\\ColorHashFacade"
-	    }
-	}
+		"component": "package",
+		"laravel": {
+			"providers": [
+				"Vongola\\ColorHash\\ColorHashServiceProvider"
+			],
+			"aliases": {
+				"ColorHash": "Vongola\\ColorHash\\Facades\\ColorHashFacade"
+			}
+		}
     }
 }
