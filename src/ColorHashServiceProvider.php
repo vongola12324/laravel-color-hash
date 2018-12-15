@@ -13,7 +13,7 @@ class ColorHashServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-	// Do nothing...
+        // Do nothing...
     }
     /**
      * Register the application services.
@@ -21,6 +21,6 @@ class ColorHashServiceProvider extends ServiceProvider
      */
     public function register()
     {
-	// Do nothing...
+        // Do nothing...
     }
 }

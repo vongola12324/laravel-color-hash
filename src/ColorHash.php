@@ -13,7 +13,7 @@ class ColorHash
      */
     public function __construct()
     {
-	$this->hasher = new Hasher();
+        $this->hasher = new Hasher();
     }
 
     /**
@@ -21,7 +21,7 @@ class ColorHash
      */
     public function hsl($string)
     {
-	return $this->hasher->hsl($string);
+        return $this->hasher->hsl($string);
     }
 
     /**
@@ -29,7 +29,7 @@ class ColorHash
      */
     public function rgb($string)
     {
-	return $this->hasher->rgb($string);
+        return $this->hasher->rgb($string);
     }
 
     /**
@@ -37,6 +37,6 @@ class ColorHash
      */
     public function hex($string)
     {
-	return $this->hasher->hex($string);
+        return $this->hasher->hex($string);
     }
 }
