@@ -16,7 +16,7 @@ ColorHash::rgb('Hello World'); // [45, 210, 150]
 // in HEX
 ColorHash::hex('Hello World'); // '#2dd296'
 ```  
-**Warning: The results is different from the results of original package, see the [issue#2](https://github.com/shahonseven/php-color-hash/issues/2) of original package.**
+**Warning: The results are different from the results of original package, see the [issue#2](https://github.com/shahonseven/php-color-hash/issues/2) of original package.**
 
 ## Notice
 This is a wrapped version of [shahonseven/php-color-hash](https://github.com/shahonseven/php-color-hash) for laravel 5.0+.  
