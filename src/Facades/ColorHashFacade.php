@@ -3,7 +3,7 @@ namespace Vongola\ColorHash\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class ImgurFacade extends Facade
+class ColorHashFacade extends Facade
 {
     protected static function getFacadeAccessor()
     {
