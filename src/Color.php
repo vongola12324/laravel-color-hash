@@ -32,19 +32,23 @@ class Color
 
         // Custom lightness
         if (array_key_exists('lightness', $options)) {
-            $this->customLightness = is_array($options['lightness']) ? $options['lightness'] : [$options['lightness']];
+            $L = $options['lightness'] ?? [0.35, 0.5, 0.65];
+            $this->customLightness = is_array($L) ? $L : [$L];
         }
 
 
         // Custom saturation
         if (array_key_exists('saturation', $options)) {
-            $this->customSaturation = is_array($options['saturation']) ? $options['saturation'] : [$options['saturation']];
+            $S = $options['saturation'] ?? [0.35, 0.5, 0.65];
+            $this->customSaturation = is_array($S) ? $S : [$S];
         }
 
         // Custom Hue
         if (array_key_exists('hue', $options)) {
             $H = $options['hue'];
-            if (is_integer($H) || is_double($H)) {
+            if (is_null($H)) {
+                $this->customHue = [];
+            } else if (is_integer($H) || is_double($H)) {
                 $this->customHue = [['min' => $H, 'max' => $H]];
             } else {
                 if (isset($H[0])) {
@@ -57,8 +61,8 @@ class Color
         if (count($this->customHue) > 0) {
             $this->customHue = array_map(function ($range) {
                 return [
-                    'min' => array_key_exists('min', $range) ? $range['min'] : 0,
-                    'max' => array_key_exists('max', $range) ? $range['max'] : 0
+                    'min' => array_key_exists('min', $range) && !is_null($range['min']) ? $range['min'] : 0,
+                    'max' => array_key_exists('max', $range) && !is_null($range['max']) ? $range['max'] : 0
                 ];
             }, $this->customHue);
         }
@@ -69,12 +73,12 @@ class Color
     /**
      * Convert a string to a hsl array
      * @param $string
-     * @return
+     * @return array
      */
     public function hsl($string)
     {
         $hash = $this->hasher->hash($string, $this->customHashFunction);
-        if (!empty($this->customHue)) {
+        if (count($this->customHue) > 0) {
             $range = $this->customHue[intval(bcmod($hash, strval(count($this->customHue))))];
             $hueResolution = "727";
             $H = bcadd(bcdiv(bcmul(bcmod(bcdiv($hash, strval(count($this->customHue))), $hueResolution), strval($range['max'] - $range['min'])), $hueResolution), strval($range['min']));
@@ -92,7 +96,7 @@ class Color
     /**
      * Convert a string to a rgb array
      * @param $string
-     * @return
+     * @return array
      */
     public function rgb($string)
     {
@@ -103,7 +107,7 @@ class Color
     /**
      * Convert a string to color hex
      * @param $string
-     * @return
+     * @return string
      */
     public function hex($string)
     {
