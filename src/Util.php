@@ -25,7 +25,7 @@ class Util
      */
     public static function isValidHue($hue)
     {
-        return self::isBetween($hue, 0, 360);
+        return is_numeric($hue) && self::isBetween($hue, 0, 360);
     }
 
     /**
@@ -36,7 +36,7 @@ class Util
      */
     public static function isValidSaturation($saturation)
     {
-        return self::isBetween($saturation, 0, 1);
+        return is_numeric($saturation) &&self::isBetween($saturation, 0, 1);
     }
 
     /**
@@ -47,7 +47,7 @@ class Util
      */
     public static function isValidLightness($lightness)
     {
-        return self::isBetween($lightness, 0, 1);
+        return is_numeric($lightness) && self::isBetween($lightness, 0, 1);
     }
 
     /**
