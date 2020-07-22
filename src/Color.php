@@ -92,9 +92,13 @@ class Color
                         } else {
                             // Ignore
                         }
-                    } elseif (is_array($element) && array_key_exists('min', $element) && array_key_exists('max', $element)) {
-                        if (Util::isValidHue($element['min']) && Util::isValidHue($element['max'])) {
-                            array_push($this->options['hue'], ['min' => $element['min'], 'max' => $element['max']]);
+                    } elseif (is_array($element)) {
+                        if (array_key_exists('min', $element) && array_key_exists('max', $element)) {
+                            if (Util::isValidHue($element['min']) && Util::isValidHue($element['max'])) {
+                                array_push($this->options['hue'], ['min' => $element['min'], 'max' => $element['max']]);
+                            } else {
+                                // Ignore
+                            }
                         } else {
                             // Ignore
                         }
