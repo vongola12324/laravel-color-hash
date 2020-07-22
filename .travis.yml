@@ -2,10 +2,6 @@
 
 language: php
 
-addons:
-  sonarqube: true
-
-
 # Define the php versions against we want to test our code
 php:
 - 7.2
@@ -25,7 +21,7 @@ after_success:
 # Submit coverage report to https://codecov.io
 - bash <(curl -s https://codecov.io/bash) -f coverage/phpunit.coverage.xml
 # Submit coverage report to self-hosted SonarQube
-- sonar-scanner -D sonar.host.url=$SONAR_HOST -D sonar.login=$SONAR_SECRET -X
+- sonar-scanner -D sonar.host.url=$SONAR_HOST -D sonar.login=$SONAR_SECRET
 
 #after_failure:
 
