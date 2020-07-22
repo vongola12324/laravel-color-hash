@@ -2,6 +2,10 @@
 
 language: php
 
+addons:
+  sonarqube: true
+
+
 # Define the php versions against we want to test our code
 php:
 - 7.1
@@ -15,13 +19,15 @@ install:
 
 # Testing the app (see phpunit.xml) for configs, generating Code Coverage report
 script:
-- composer test -- --coverage-clover=coverage.xml
+- composer test -- 
 
 #after_script:
 
 after_success:
 # Submit coverage report to https://codecov.io
-- bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash) -f coverage/phpunit.coverage.xml
+# Submit coverage report to self-hosted SonarQube
+- sonar-scanner -D sonar.host.url=$SONAR_HOST -D sonar.login=$SONAR_SECRET -X
 
 #after_failure:
 
