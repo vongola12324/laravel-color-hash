@@ -28,7 +28,8 @@ jobs:
       run: composer install --prefer-dist --no-progress --no-suggest
 
     - name: Run test suite
-      uses: MilesChou/docker-xdebug@7.4
+      uses: MilesChou/docker-xdebug@master
+      image: docker://mileschou/xdebug:7.4
       with:
         config: ./phpunit.xml
     - name: SonarQube Scan
