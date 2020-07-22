@@ -14,7 +14,7 @@ php:
 before_install:
 - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.4.0.2170-linux.zip
 - unzip sonar-scanner-cli-4.4.0.2170-linux.zip
-- mv sonar-scanner-cli-4.4.0.2170-linux sonar
+- mv sonar-scanner-4.4.0.2170-linux sonar
 
 install:
 - travis_retry composer install --no-interaction --no-suggest
@@ -27,7 +27,7 @@ after_success:
 # Submit coverage report to https://codecov.io
 - bash <(curl -s https://codecov.io/bash) -f coverage/phpunit.coverage.xml
 # Submit coverage report to self-hosted SonarQube
-- sonar-scanner/bin/sonar-scanner -D sonar.host.url=$SONAR_HOST -D sonar.login=$SONAR_SECRET
+- sonar/bin/sonar-scanner -D sonar.host.url=$SONAR_HOST -D sonar.login=$SONAR_SECRET
 
 #after_failure:
 
