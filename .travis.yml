@@ -10,6 +10,11 @@ php:
 
 # Note: Code coverage requires php-xDebug extension enabled on CI server
 
+before_install:
+- wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.4.0.2170-linux.zip
+- unzip sonar-scanner-cli-4.4.0.2170-linux.zip
+- export PATH=$(pwd)/sonar-scanner-cli-4.4.0.2170-linux/bin:$PATH
+
 install:
 - travis_retry composer install --no-interaction --no-suggest
 
