@@ -1,0 +1,21 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: init
+  image: composer:latest
+  commands:
+  - composer install --prefer-dist --no-progress --no-suggest 
+- name: phpunit
+  image: composer:latest
+  commands:
+  - vendor/bin/phpunit
+- name: code-analysis
+  image: aosapps/drone-sonar-plugin
+  settings:
+    sonar_host:
+      from_secret: SONAR_HOST
+    sonar_token:
+      from_secret: SONAR_SECRET
