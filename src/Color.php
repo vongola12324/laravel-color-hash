@@ -9,7 +9,9 @@ class Color
 {
     private $hasher;
     private $options;
-
+    const hueKey = 'hue';
+    const saturationKey = 'saturation';
+    const lightnessKey = 'lightness';
 
     /**
      * ColorHash constructor.
@@ -18,9 +20,9 @@ class Color
     {
         $this->hasher = 'bkdr';
         $this->options = [
-            'hue' => [['min' => 0, 'max' => 360]],
-            'saturation' => [0.35, 0.5, 0.65],
-            'lightness' => [0.35, 0.5, 0.65],
+            static::hueKey => [['min' => 0, 'max' => 360]],
+            self::saturationKey => [0.35, 0.5, 0.65],
+            self::saturationKey => [0.35, 0.5, 0.65],
         ];
     }
 
@@ -36,18 +38,18 @@ class Color
         }
 
         // Custom Hue
-        if (array_key_exists('hue', $options)) {
-            $this->customHue($options['hue']);
+        if (array_key_exists(self::hueKey, $options)) {
+            $this->customHue($options[self::hueKey]);
         }
 
         // Custom saturation
-        if (array_key_exists('saturation', $options)) {
-            $this->customSaturation($options['saturation']);
+        if (array_key_exists(self::saturationKey, $options)) {
+            $this->customSaturation($options[self::saturationKey]);
         }
 
         // Custom lightness
-        if (array_key_exists('lightness', $options)) {
-            $this->customLightness($options['lightness']);
+        if (array_key_exists(self::saturationKey, $options)) {
+            $this->customLightness($options[self::saturationKey]);
         }
 
         return $this;
@@ -74,40 +76,25 @@ class Color
     public function customHue($hue)
     {
         $failed = false;
-        if (is_numeric($hue)) {
-            if (Util::isValidHue($hue)) {
-                $this->options['hue'] = [['min' => $hue, 'max' => $hue]];
-            } else {
-                $failed = true;
-            }
+        if (is_numeric($hue) && Util::isValidHue($hue)) {
+            $this->options[self::hueKey] = [['min' => $hue, 'max' => $hue]];
         } elseif (is_array($hue)) {
-            $this->options['hue'] = [];
+            $this->options[self::hueKey] = [];
             if (array_key_exists('min', $hue) && array_key_exists('max', $hue)) {
-                array_push($this->options['hue'], ['min' => $hue['min'], 'max' => $hue['max']]);
+                array_push($this->options[self::hueKey], ['min' => $hue['min'], 'max' => $hue['max']]);
             } else {
                 foreach ($hue as $element) {
-                    if (is_numeric($element)) {
-                        if (Util::isValidHue($hue)) {
-                            array_push($this->options['hue'], ['min' => $element, 'max' => $element]);
-                        } else {
-                            // Ignore
-                        }
-                    } elseif (is_array($element)) {
-                        if (array_key_exists('min', $element) && array_key_exists('max', $element)) {
-                            if (Util::isValidHue($element['min']) && Util::isValidHue($element['max'])) {
-                                array_push($this->options['hue'], ['min' => $element['min'], 'max' => $element['max']]);
-                            } else {
-                                // Ignore
-                            }
-                        } else {
-                            // Ignore
-                        }
+                    if (is_numeric($element) && Util::isValidHue($hue)) {
+                        array_push($this->options[self::hueKey], ['min' => $element, 'max' => $element]);
+                    } elseif (is_array($element) && array_key_exists('min', $element) && array_key_exists('max', $element)
+                        && Util::isValidHue($element['min']) && Util::isValidHue($element['max'])) {
+                        array_push($this->options[self::hueKey], ['min' => $element['min'], 'max' => $element['max']]);    
                     } else {
                         // Ignore
                     }
                 }
             }
-            if (empty($this->options['hue'])) {
+            if (empty($this->options[self::hueKey])) {
                 $failed = true;
             }
         } else {
@@ -128,26 +115,18 @@ class Color
     public function customSaturation($saturation)
     {
         $failed = false;
-        if (is_float($saturation)) {
-            if (Util::isValidSaturation($saturation)) {
-                $this->options['saturation'] = [$saturation];
-            } else {
-                $failed = true;
-            }
+        if (is_float($saturation) && Util::isValidSaturation($saturation)) {
+            $this->options[self::saturationKey] = [$saturation];
         } elseif (is_array($saturation)) {
-            $this->options['saturation'] = [];
+            $this->options[self::saturationKey] = [];
             foreach ($saturation as $element) {
-                if (is_float($element)) {
-                    if (Util::isValidSaturation($element)) {
-                        array_push($this->options['saturation'], $element);
-                    } else {
-                        $failed = true;
-                    }
+                if (is_float($element) && Util::isValidSaturation($element)) {
+                    array_push($this->options[self::saturationKey], $element);
                 } else {
                     // Ignore
                 }
             }
-            if (empty($this->options['saturation'])) {
+            if (empty($this->options[self::saturationKey])) {
                 $failed = true;
             }
         } else {
@@ -168,26 +147,18 @@ class Color
     public function customLightness($lightness)
     {
         $failed = false;
-        if (is_float($lightness)) {
-            if (Util::isValidLightness($lightness)) {
-                $this->options['lightness'] = [$lightness];
-            } else {
-                $failed = true;
-            }
+        if (is_float($lightness) && Util::isValidLightness($lightness)) {
+            $this->options[self::saturationKey] = [$lightness];
         } elseif (is_array($lightness)) {
-            $this->options['lightness'] = [];
+            $this->options[self::saturationKey] = [];
             foreach ($lightness as $element) {
-                if (is_float($element)) {
-                    if (Util::isValidLightness($element)) {
-                        array_push($this->options['lightness'], $element);
-                    } else {
-                        $failed = true;
-                    }
+                if (is_float($element) && Util::isValidLightness($element)) {
+                    array_push($this->options[self::saturationKey], $element);
                 } else {
                     // Ignore
                 }
             }
-            if (empty($this->options['lightness'])) {
+            if (empty($this->options[self::saturationKey])) {
                 $failed = true;
             }
         } else {
@@ -231,16 +202,16 @@ class Color
     {
         $hash = $this->hash($string);
         // Hue
-        $range = $this->options['hue'][$hash % count($this->options['hue'])];
+        $range = $this->options[self::hueKey][$hash % count($this->options[self::hueKey])];
         $hueResolution = "727";
-        $hue = intval((($hash / count($this->options['hue'])) % $hueResolution)
+        $hue = intval((($hash / count($this->options[self::hueKey])) % $hueResolution)
                * ($range['max'] - $range['min']) / $hueResolution + $range['min']);
         // Saturation
         $hash = intval($hash / 360);
-        $saturation = $this->options['saturation'][$hash % count($this->options['saturation'])];
+        $saturation = $this->options[self::saturationKey][$hash % count($this->options[self::saturationKey])];
         // Lightness
-        $hash = intval($hash / count($this->options['lightness']));
-        $lightness = $this->options['lightness'][$hash % count($this->options['lightness'])];
+        $hash = intval($hash / count($this->options[self::saturationKey]));
+        $lightness = $this->options[self::saturationKey][$hash % count($this->options[self::saturationKey])];
         
         return [$hue, $saturation, $lightness];
     }
