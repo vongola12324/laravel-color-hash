@@ -31,6 +31,7 @@ jobs:
       uses: MilesChou/docker-xdebug@master
       with:
         config: ./phpunit.xml
+      run: vendor/bin/phpunit
     - name: SonarQube Scan
       uses: kitabisa/sonarqube-action@master
       with:
