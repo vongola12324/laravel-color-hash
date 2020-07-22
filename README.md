@@ -10,13 +10,13 @@ composer require vongola12324/laravel-color-hash
 ### Basic
 ```php
 // in HSL, Hue ∈ [0, 360), Saturation ∈ [0, 1], Lightness ∈ [0, 1]
-ColorHash::hsl('Hello World'); // [225, 0.35, 0.65]
+ColorHash::hsl('Hello World'); // [185, 0.35, 0.35]
 
 // in RGB, R, G, B ∈ [0, 255]
-ColorHash::rgb('Hello World'); // [135, 150, 197]
+ColorHash::rgb('Hello World'); // [58, 115, 120]
 
 // in HEX
-ColorHash::hex('Hello World'); // '#8796c5'
+ColorHash::hex('Hello World'); // '#3a7378'
 ```  
 ### Custom
 ```php
@@ -28,24 +28,35 @@ $hashFunc = function ($string) {
     }
     return $hash;
 }
-ColorHash::custom(['hash' => $hashFunc])->rgb('Hello World'); // [147, 31, 82]
+ColorHash::customHash($hashFunc)->rgb('Hello World'); // [31, 147, 109]
 
 // Custom Hue
-ColorHash::custom(['hue' => 90])->rgb('Hello World'); // [166, 197, 135]
-ColorHash::custom(['hue' => ['min' => 90, 'max' => 270]])->rgb('Hello World'); // [135, 173, 197]
-ColorHash::custom(['hue' => [['min' => 30, 'max' => 90], ['min' => 180, 'max' => 210], ['min' => 270, 'max' => 285]]])->rgb('Hello World'); // [179, 135, 197]
-
-// Custom Lightness
-ColorHash::custom(['lightness' => 0.5])->rgb('Hello World'); // Broken, don't use it
-ColorHash::custom(['lightness' => [0.35, 0.5, 0.65]])->rgb('Hello World'); // [135, 150, 197]
+ColorHash::customHue(90)->rgb('Hello World'); // [89, 120, 58]
+ColorHash::customHue(['min' => 90, 'max' => 270])->rgb('Hello World'); // [58, 118, 120]
+ColorHash::customHue([['min' => 30, 'max' => 90], ['min' => 180, 'max' => 210], ['min' => 270, 'max' => 285]])->rgb('Hello World'); // [120, 100, 58]
 
 // Custom Saturation
-ColorHash::custom(['saturation' => 0.5])->rgb('Hello World'); // Broken, don't use it
-ColorHash::custom(['saturation' => [0.35, 0.5, 0.65]])->rgb('Hello World'); // [135, 150, 197]
+ColorHash::customSaturation(0.5)->rgb('Hello World'); // [45, 126, 134]
+ColorHash::customSaturation([0.35, 0.5, 0.65])->rgb('Hello World'); // [58, 115, 120]
+
+// Custom Lightness
+ColorHash::customLightness(0.5)->rgb('Hello World'); // [83, 165, 172]
+ColorHash::customLightness([0.35, 0.5, 0.65])->rgb('Hello World'); // [58, 115, 120]
 ```
 
-> **The results of CustomLightness and CustomSaturation is wrong when there is only one parameter of them.**    
-> **I'm not sure why did that happened.  This might be fixed in later release.**
+All customXXX method can be used in a single custom method by passing an option array, for example:
+```php
+ColorHash::customHue(90)->rgb('Test');
+// Is Equal to
+ColorHash::custom(['hue' => 90])->rgb('Test');
+```
+
+Also can combine with more than one custom option, for example:
+```php
+ColorHash::customHue(90)->customSaturation(0.5)->customLightness(0.5)->customHash($hashFunc)->rgb('Test');
+// Is Equal to
+ColorHash::custom(['hue' => 90, 'saturation' => 0.5, 'lightness' => 0.5, 'hash' => $hashFunc])->rgb('Test');
+```
 
 ## License
 MIT. 
