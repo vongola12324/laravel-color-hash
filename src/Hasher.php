@@ -5,44 +5,85 @@ namespace Vongola\ColorHash;
 class Hasher
 {
     /**
-     * @param $string
-     * @param null|\Closure $hashFunc
-     * @return bool|string
+     * BKDR Hash
+     *
+     * @param string $string
+     * @return int
      */
-    public function hash($string, $hashFunc = null)
+    public static function BKDRHash(string $input): int
     {
-        if ($hashFunc === null) {
-            return $this->_hash($string);
-        } else {
-            return $hashFunc($string);
+        return self::bkdr($input);
+    }
+    public static function bkdr(string $input): int
+    {
+        $seed = 131;
+        $hash = 0;
+        foreach (str_split($input) as $char) {
+            $hash = $hash * $seed + ord($char);
         }
+        return ($hash & 0x7FFFFFFF);
     }
 
     /**
-     * @param $string
-     * @return bool|string
+     * AP Hash
+     *
+     * @param string $input
+     * @return int
      */
-    private function _hash($string)
+    public static function APHash(string $input): int
     {
-        $seed = "131";
-        $seed2 = "137";
-        $hash = "0";
-        // make hash more sensitive for short string like 'a', 'b', 'c'
-        $string .= 'x';
-        $safeInteger = Util::parseInt(bcdiv("9007199254740991", $seed2));
-        for ($i = 0; $i < mb_strlen($string); $i++) {
-            // bccomp return 0 when equal, return 1 when $left>$right, and return -1 when $right > $left
-            if (bccomp($hash, $safeInteger) === 1) {
-                $hash = Util::parseInt(bcdiv($hash, $seed2));
+        return self::ap($input);
+    }
+    public static function ap(string $input): int
+    {
+        $hash = 0;
+        $i = 0;
+        foreach (str_split($input) as $char) {
+            if (($i & 1) === 0) {
+                $hash ^= (($hash << 7) ^ ord($char) ^ ($hash >> 3));
+            } else {
+                $hash ^= (~(($hash << 11) ^ ord($char) ^ ($hash >> 5)));
             }
-            $hash = bcadd(bcmul($hash, $seed), strval($this->getCharCode(mb_substr($string, $i, 1, 'UTF-8'))));
+            $i += 1;
         }
-        return $hash;
+        return ($hash & 0x7FFFFFFF);
     }
 
-    private function getCharCode($char) {
-        list(, $ord) = unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'));
-        return $ord;
+    /**
+     * DJB Hash
+     *
+     * @param string $input
+     * @return int
+     */
+    public static function DJBHash(string $input): int
+    {
+        return self::djb($input);
+    }
+    public static function djb(string $input): int
+    {
+        $hash = 5381;
+        foreach (str_split($input) as $char) {
+            $hash = ($hash << 5) + ord($char);
+        }
+        return ($hash & 0x7FFFFFFF);
     }
 
+    /**
+     * JS Hash
+     *
+     * @param string $input
+     * @return int
+     */
+    public static function JSHash(string $input): int
+    {
+        return self::js($input);
+    }
+    public static function js(string $input): int
+    {
+        $hash = 1315423911;
+        foreach (str_split($input) as $char) {
+            $hash ^= (($hash << 5) + ord($char) + ($hash >> 2));
+        }
+        return ($hash & 0x7FFFFFFF);
+    }
 }

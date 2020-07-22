@@ -2,9 +2,13 @@
 
 namespace Vongola\ColorHash;
 
+use Exception;
+use InvalidArgumentException;
+
 class Color
 {
-    private $hasher, $customHashFunction, $customHue, $customLightness, $customSaturation;
+    private $hasher;
+    private $options;
 
 
     /**
@@ -12,11 +16,12 @@ class Color
      */
     public function __construct()
     {
-        $this->hasher = new Hasher();
-        $this->customHashFunction = null;
-        $this->customHue = [];
-        $this->customLightness = [0.35, 0.5, 0.65];
-        $this->customSaturation = [0.35, 0.5, 0.65];
+        $this->hasher = 'bkdr';
+        $this->options = [
+            'hue' => [['min' => 0, 'max' => 360]],
+            'saturation' => [0.35, 0.5, 0.65],
+            'lightness' => [0.35, 0.5, 0.65],
+        ];
     }
 
     /**
@@ -27,70 +32,213 @@ class Color
     {
         // Custom hash function
         if (array_key_exists('hash', $options)) {
-            $this->customHashFunction = $options['hash'];
-        }
-
-        // Custom lightness
-        if (array_key_exists('lightness', $options)) {
-            $L = $options['lightness'] ?? [0.35, 0.5, 0.65];
-            $this->customLightness = is_array($L) ? $L : [$L];
-        }
-
-
-        // Custom saturation
-        if (array_key_exists('saturation', $options)) {
-            $S = $options['saturation'] ?? [0.35, 0.5, 0.65];
-            $this->customSaturation = is_array($S) ? $S : [$S];
+            $this->customHash($options['hash']);
         }
 
         // Custom Hue
         if (array_key_exists('hue', $options)) {
-            $H = $options['hue'];
-            if (is_null($H)) {
-                $this->customHue = [];
-            } else if (is_integer($H) || is_double($H)) {
-                $this->customHue = [['min' => $H, 'max' => $H]];
-            } else {
-                if (isset($H[0])) {
-                    $this->customHue = $H;
-                } else {
-                    $this->customHue = [$H];
-                }
-            }
+            $this->customHue($options['hue']);
         }
-        if (count($this->customHue) > 0) {
-            $this->customHue = array_map(function ($range) {
-                return [
-                    'min' => array_key_exists('min', $range) && !is_null($range['min']) ? $range['min'] : 0,
-                    'max' => array_key_exists('max', $range) && !is_null($range['max']) ? $range['max'] : 0
-                ];
-            }, $this->customHue);
+
+        // Custom saturation
+        if (array_key_exists('saturation', $options)) {
+            $this->customSaturation($options['saturation']);
+        }
+
+        // Custom lightness
+        if (array_key_exists('lightness', $options)) {
+            $this->customLightness($options['lightness']);
         }
 
         return $this;
     }
 
     /**
+     * Custom Hash
+     *
+     * @param string|callable $hasher
+     * @return Color
+     */
+    public function customHash($hasher)
+    {
+        $this->hasher = $hasher;
+        return $this;
+    }
+
+    /**
+     * Custom Hue
+     *
+     * @param int|array $hue
+     * @return Color
+     */
+    public function customHue($hue)
+    {
+        $failed = false;
+        if (is_numeric($hue)) {
+            if (Util::isValidHue($hue)) {
+                $this->options['hue'] = [['min' => $hue, 'max' => $hue]];
+            } else {
+                $failed = true;
+            }
+        } elseif (is_array($hue)) {
+            $this->options['hue'] = [];
+            if (array_key_exists('min', $hue) && array_key_exists('max', $hue)) {
+                array_push($this->options['hue'], ['min' => $hue['min'], 'max' => $hue['max']]);
+            } else {
+                foreach ($hue as $element) {
+                    if (is_numeric($element)) {
+                        if (Util::isValidHue($hue)) {
+                            array_push($this->options['hue'], ['min' => $element, 'max' => $element]);
+                        } else {
+                            // Ignore
+                        }
+                    } elseif (is_array($element) && array_key_exists('min', $element) && array_key_exists('max', $element)) {
+                        if (Util::isValidHue($element['min']) && Util::isValidHue($element['max'])) {
+                            array_push($this->options['hue'], ['min' => $element['min'], 'max' => $element['max']]);
+                        } else {
+                            // Ignore
+                        }
+                    } else {
+                        // Ignore
+                    }
+                }
+            }
+            if (empty($this->options['hue'])) {
+                $failed = true;
+            }
+        } else {
+            $failed = true;
+        }
+        if ($failed) {
+            throw new InvalidArgumentException('Wrong argument in custom hue.');
+        }
+        return $this;
+    }
+
+    /**
+     * Custom saturation
+     *
+     * @param float|array $saturation
+     * @return Color
+     */
+    public function customSaturation($saturation)
+    {
+        $failed = false;
+        if (is_float($saturation)) {
+            if (Util::isValidSaturation($saturation)) {
+                $this->options['saturation'] = [$saturation];
+            } else {
+                $failed = true;
+            }
+        } elseif (is_array($saturation)) {
+            $this->options['saturation'] = [];
+            foreach ($saturation as $element) {
+                if (is_float($element)) {
+                    if (Util::isValidSaturation($element)) {
+                        array_push($this->options['saturation'], $element);
+                    } else {
+                        $failed = true;
+                    }
+                } else {
+                    // Ignore
+                }
+            }
+            if (empty($this->options['saturation'])) {
+                $failed = true;
+            }
+        } else {
+            $failed = true;
+        }
+        if ($failed) {
+            throw new InvalidArgumentException('Wrong argument in custom saturation.');
+        }
+        return $this;
+    }
+
+    /**
+     * Custom Lightness
+     *
+     * @param float|array $lightness
+     * @return Color
+     */
+    public function customLightness($lightness)
+    {
+        $failed = false;
+        if (is_float($lightness)) {
+            if (Util::isValidLightness($lightness)) {
+                $this->options['lightness'] = [$lightness];
+            } else {
+                $failed = true;
+            }
+        } elseif (is_array($lightness)) {
+            $this->options['lightness'] = [];
+            foreach ($lightness as $element) {
+                if (is_float($element)) {
+                    if (Util::isValidLightness($element)) {
+                        array_push($this->options['lightness'], $element);
+                    } else {
+                        $failed = true;
+                    }
+                } else {
+                    // Ignore
+                }
+            }
+            if (empty($this->options['lightness'])) {
+                $failed = true;
+            }
+        } else {
+            $failed = true;
+        }
+        if ($failed) {
+            throw new InvalidArgumentException('Wrong argument in custom lightness.');
+        }
+        return $this;
+    }
+
+    /**
+     * Hash string
+     *
+     * @param string $string
+     * @return string
+     */
+    private function hash(string $string)
+    {
+        if (is_string($this->hasher)) {
+            if (method_exists('Hasher', $this->hasher)) {
+                $hash = call_user_func(['Hasher', $this->hasher], $string);
+            } else {
+                $hash = Hasher::bkdr($string);
+            }
+        } elseif (is_callable($this->hasher)) {
+            $hash = call_user_func($this->hasher, $string);
+        } else {
+            throw new Exception('Can not execute hash function.');
+        }
+        return $hash;
+    }
+
+    /**
      * Convert a string to a hsl array
+     * Note that H ∈ [0, 360); S ∈ [0, 1]; L ∈ [0, 1];
      * @param $string
      * @return array
      */
     public function hsl($string)
     {
-        $hash = $this->hasher->hash($string, $this->customHashFunction);
-        if (count($this->customHue) > 0) {
-            $range = $this->customHue[intval(bcmod($hash, strval(count($this->customHue))))];
-            $hueResolution = "727";
-            $H = bcadd(bcdiv(bcmul(bcmod(bcdiv($hash, strval(count($this->customHue))), $hueResolution), strval($range['max'] - $range['min'])), $hueResolution), strval($range['min']));
-        } else {
-            $H = bcmod($hash, "359");
-        }
-        $hash = Util::parseInt(bcdiv($hash, "360"));
-        $S = $this->customSaturation[intval(bcmod($hash, strval(count($this->customSaturation))))];
-        $hash = Util::parseInt(bcdiv($hash, strval(count($this->customSaturation))));
-        $L = $this->customLightness[intval(bcmod($hash, strval(count($this->customLightness))))];
-
-        return [is_integer($H) ? intval($H) : floatval($H), $S, $L];
+        $hash = $this->hash($string);
+        // Hue
+        $range = $this->options['hue'][$hash % count($this->options['hue'])];
+        $hueResolution = "727";
+        $hue = intval((($hash / count($this->options['hue'])) % $hueResolution)
+               * ($range['max'] - $range['min']) / $hueResolution + $range['min']);
+        // Saturation
+        $hash = intval($hash / 360);
+        $saturation = $this->options['saturation'][$hash % count($this->options['saturation'])];
+        // Lightness
+        $hash = intval($hash / count($this->options['lightness']));
+        $lightness = $this->options['lightness'][$hash % count($this->options['lightness'])];
+        
+        return [$hue, $saturation, $lightness];
     }
 
     /**
@@ -101,7 +249,7 @@ class Color
     public function rgb($string)
     {
         $hsl = $this->hsl($string);
-        return $this->hsl2rgb($hsl);
+        return Util::hsl2rgb($hsl);
     }
 
     /**
@@ -112,49 +260,6 @@ class Color
     public function hex($string)
     {
         $rgb = $this->rgb($string);
-        return $this->rgb2hex($rgb);
-    }
-
-    /**
-     * Convert HSL to RGB
-     * @see {@link http://zh.wikipedia.org/wiki/HSL和HSV色彩空间} for further information.
-     * @param $hsl
-     * @return array
-     */
-    private function hsl2rgb($hsl)
-    {
-        $H = $hsl[0] / 360;
-        $S = $hsl[1];
-        $L = $hsl[2];
-        $q = $L < 0.5 ? $L * (1 + $S) : $L + $S - $L * $S;
-        $p = 2 * $L - $q;
-        return array_map(function ($color) use ($p, $q) {
-            if ($color < 0) {
-                $color++;
-            }
-            if ($color > 1) {
-                $color--;
-            }
-            if ($color < 1 / 6) {
-                $color = $p + ($q - $p) * 6 * $color;
-            } else if ($color < 0.5) {
-                $color = $q;
-            } else if ($color < 2 / 3) {
-                $color = $p + ($q - $p) * 6 * (2 / 3 - $color);
-            } else {
-                $color = $p;
-            }
-            return intval(round($color * 255));
-        }, [$H + 1 / 3, $H, $H - 1 / 3]);
-    }
-
-    /**
-     * Convert RGB to hex
-     * @param $rgb
-     * @return string
-     */
-    private function rgb2hex($rgb)
-    {
-        return sprintf("#%02x%02x%02x", $rgb[0], $rgb[1], $rgb[2]);
+        return Util::rgb2hex($rgb);
     }
 }
