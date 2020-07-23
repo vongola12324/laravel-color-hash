@@ -20,7 +20,7 @@ class Color
     {
         $this->hasher = 'bkdr';
         $this->options = [
-            static::HUE_KEY => [['min' => 0, 'max' => 360]],
+            self::HUE_KEY => [['min' => 0, 'max' => 360]],
             self::SATURATION_KEY => [0.35, 0.5, 0.65],
             self::LIGHTNESS_KEY => [0.35, 0.5, 0.65],
         ];
@@ -88,7 +88,7 @@ class Color
         }
         $this->options[self::HUE_KEY] = [];
         foreach ($newHue as $element) {
-            if (array_key_exists('min', $element) && array_key_exists('max', $element)
+            if (is_array($element) && array_key_exists('min', $element) && array_key_exists('max', $element)
                 && Util::isValidHue($element['min']) && Util::isValidHue($element['max'])) {
                 array_push($this->options[self::HUE_KEY], ['min' => $element['min'], 'max' => $element['max']]);    
             }
