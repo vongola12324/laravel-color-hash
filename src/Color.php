@@ -27,7 +27,7 @@ class Color
     }
 
     /**
-     * @param $options
+     * @param  $options
      * @return Color
      */
     public function custom($options = [])
@@ -58,7 +58,7 @@ class Color
     /**
      * Custom Hash
      *
-     * @param string|callable $hasher
+     * @param  string|callable $hasher
      * @return Color
      */
     public function customHash($hasher)
@@ -70,7 +70,7 @@ class Color
     /**
      * Custom Hue
      *
-     * @param int|array $hue
+     * @param  int|array $hue
      * @return Color
      */
     public function customHue($hue)
@@ -89,7 +89,8 @@ class Color
         $this->options[self::HUE_KEY] = [];
         foreach ($newHue as $element) {
             if (is_array($element) && array_key_exists('min', $element) && array_key_exists('max', $element)
-                && Util::isValidHue($element['min']) && Util::isValidHue($element['max'])) {
+                && Util::isValidHue($element['min']) && Util::isValidHue($element['max'])
+            ) {
                 array_push($this->options[self::HUE_KEY], ['min' => $element['min'], 'max' => $element['max']]);    
             }
         }
@@ -105,7 +106,7 @@ class Color
     /**
      * Custom saturation
      *
-     * @param float|array $saturation
+     * @param  float|array $saturation
      * @return Color
      */
     public function customSaturation($saturation)
@@ -137,7 +138,7 @@ class Color
     /**
      * Custom Lightness
      *
-     * @param float|array $lightness
+     * @param  float|array $lightness
      * @return Color
      */
     public function customLightness($lightness)
@@ -169,7 +170,7 @@ class Color
     /**
      * Hash string
      *
-     * @param string $string
+     * @param  string $string
      * @return int
      */
     private function hash(string $string): int
@@ -191,7 +192,8 @@ class Color
     /**
      * Convert a string to a hsl array
      * Note that H ∈ [0, 360); S ∈ [0, 1]; L ∈ [0, 1];
-     * @param $string
+     *
+     * @param  $string
      * @return array
      */
     public function hsl($string)
@@ -200,8 +202,10 @@ class Color
         // Hue
         $range = $this->options[self::HUE_KEY][$hash % count($this->options[self::HUE_KEY])];
         $hueResolution = 727;
-        $hue = intval((($hash / count($this->options[self::HUE_KEY])) % $hueResolution)
-               * ($range['max'] - $range['min']) / $hueResolution + $range['min']);
+        $hue = intval(
+            (intval($hash / count($this->options[self::HUE_KEY])) % $hueResolution)
+            * ($range['max'] - $range['min']) / $hueResolution + $range['min']
+        );
         // Saturation
         $hash = intval($hash / 360);
         $saturation = $this->options[self::SATURATION_KEY][$hash % count($this->options[self::SATURATION_KEY])];
@@ -214,7 +218,8 @@ class Color
 
     /**
      * Convert a string to a rgb array
-     * @param $string
+     *
+     * @param  $string
      * @return array
      */
     public function rgb($string)
@@ -225,7 +230,8 @@ class Color
 
     /**
      * Convert a string to color hex
-     * @param $string
+     *
+     * @param  $string
      * @return string
      */
     public function hex($string)

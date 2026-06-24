@@ -16,7 +16,7 @@ class HasherTest extends TestCase
     public function testAPHash()
     {
         $this->assertEquals(Hasher::ap('Test'), Hasher::APHash('Test'));
-        $this->assertEquals(Hasher::ap('Test'), 372618591);
+        $this->assertEquals(Hasher::ap('Test'), 431338847);
     }
 
     public function testDBJHash()
@@ -28,6 +28,6 @@ class HasherTest extends TestCase
     public function testJSHash()
     {
         $this->assertEquals(Hasher::js('Test'), Hasher::JSHash('Test'));
-        $this->assertEquals(Hasher::js('Test'), 1689509050);
+        $this->assertEquals(Hasher::js('Test'), 246668474);
     }
 }

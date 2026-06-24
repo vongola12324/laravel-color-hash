@@ -7,7 +7,7 @@ class Hasher
     /**
      * BKDR Hash
      *
-     * @param string $input
+     * @param  string $input
      * @return int
      */
     public static function BKDRHash(string $input): int
@@ -19,15 +19,15 @@ class Hasher
         $seed = 131;
         $hash = 0;
         foreach (str_split($input) as $char) {
-            $hash = $hash * $seed + ord($char);
+            $hash = ($hash * $seed + ord($char)) & 0x7FFFFFFF;
         }
-        return ($hash & 0x7FFFFFFF);
+        return $hash;
     }
 
     /**
      * AP Hash
      *
-     * @param string $input
+     * @param  string $input
      * @return int
      */
     public static function APHash(string $input): int
@@ -44,15 +44,16 @@ class Hasher
             } else {
                 $hash ^= (~(($hash << 11) ^ ord($char) ^ ($hash >> 5)));
             }
+            $hash &= 0x7FFFFFFF;
             $i += 1;
         }
-        return ($hash & 0x7FFFFFFF);
+        return $hash;
     }
 
     /**
      * DJB Hash
      *
-     * @param string $input
+     * @param  string $input
      * @return int
      */
     public static function DJBHash(string $input): int
@@ -63,15 +64,15 @@ class Hasher
     {
         $hash = 5381;
         foreach (str_split($input) as $char) {
-            $hash = ($hash << 5) + ord($char);
+            $hash = (($hash << 5) + ord($char)) & 0x7FFFFFFF;
         }
-        return ($hash & 0x7FFFFFFF);
+        return $hash;
     }
 
     /**
      * JS Hash
      *
-     * @param string $input
+     * @param  string $input
      * @return int
      */
     public static function JSHash(string $input): int
@@ -82,8 +83,8 @@ class Hasher
     {
         $hash = 1315423911;
         foreach (str_split($input) as $char) {
-            $hash ^= (($hash << 5) + ord($char) + ($hash >> 2));
+            $hash = ($hash ^ (($hash << 5) + ord($char) + ($hash >> 2))) & 0x7FFFFFFF;
         }
-        return ($hash & 0x7FFFFFFF);
+        return $hash;
     }
 }
