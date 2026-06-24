@@ -1,6 +1,6 @@
 {
     "name": "vongola12324/laravel-color-hash",
-    "description": "ColorHash Library for Laravel 5.0+",
+    "description": "ColorHash Library for Laravel 10.0+",
     "type": "library",
     "license": "MIT",
     "keywords":[
