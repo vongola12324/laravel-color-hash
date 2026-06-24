@@ -9,10 +9,10 @@ class ColorHashTest extends TestCase
 {
     private $hasher;
 
-    public function __construct()
+    protected function setUp(): void
     {
+        parent::setUp();
         $this->hasher = new Color();
-        parent::__construct();
     }
 
     public function testHslHash()
