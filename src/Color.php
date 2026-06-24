@@ -9,9 +9,9 @@ class Color
 {
     private $hasher;
     private $options;
-    const HUE_KEY = 'hue';
-    const SATURATION_KEY = 'saturation';
-    const LIGHTNESS_KEY = 'lightness';
+    public const HUE_KEY = 'hue';
+    public const SATURATION_KEY = 'saturation';
+    public const LIGHTNESS_KEY = 'lightness';
 
     /**
      * ColorHash constructor.
@@ -88,10 +88,11 @@ class Color
         }
         $this->options[self::HUE_KEY] = [];
         foreach ($newHue as $element) {
-            if (is_array($element) && array_key_exists('min', $element) && array_key_exists('max', $element)
+            if (
+                is_array($element) && array_key_exists('min', $element) && array_key_exists('max', $element)
                 && Util::isValidHue($element['min']) && Util::isValidHue($element['max'])
             ) {
-                array_push($this->options[self::HUE_KEY], ['min' => $element['min'], 'max' => $element['max']]);    
+                array_push($this->options[self::HUE_KEY], ['min' => $element['min'], 'max' => $element['max']]);
             }
         }
         if (empty($this->options[self::HUE_KEY])) {
@@ -212,7 +213,7 @@ class Color
         // Lightness
         $hash = intval($hash / count($this->options[self::LIGHTNESS_KEY]));
         $lightness = $this->options[self::LIGHTNESS_KEY][$hash % count($this->options[self::LIGHTNESS_KEY])];
-        
+
         return [$hue, $saturation, $lightness];
     }
 

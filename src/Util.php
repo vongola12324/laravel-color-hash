@@ -7,9 +7,9 @@ class Util
     /**
      * Check numeric is between max value and max value
      *
-     * @param mixed $target
-     * @param float|int $min
-     * @param float|int $max
+     * @param  mixed     $target
+     * @param  float|int $min
+     * @param  float|int $max
      * @return bool
      */
     public static function isBetween($target, $min, $max): bool
@@ -20,7 +20,7 @@ class Util
     /**
      * Check Hue value is between 0 - 360
      *
-     * @param mixed $hue
+     * @param  mixed $hue
      * @return bool
      */
     public static function isValidHue($hue): bool
@@ -31,7 +31,7 @@ class Util
     /**
      * Check Saturation value is between 0 - 1
      *
-     * @param mixed $saturation
+     * @param  mixed $saturation
      * @return bool
      */
     public static function isValidSaturation($saturation): bool
@@ -42,7 +42,7 @@ class Util
     /**
      * Check Lightness value is between 0 - 1
      *
-     * @param mixed $lightness
+     * @param  mixed $lightness
      * @return bool
      */
     public static function isValidLightness($lightness): bool
@@ -53,8 +53,8 @@ class Util
     /**
      * Convert HSL to RGB
      *
-     * @see {@link http://zh.wikipedia.org/wiki/HSL和HSV色彩空间} for further information.
-     * @param array $hsl
+     * @see    {@link http://zh.wikipedia.org/wiki/HSL和HSV色彩空间} for further information.
+     * @param  array $hsl
      * @return array
      */
     public static function hsl2rgb($hsl): array
@@ -71,16 +71,19 @@ class Util
             }
             $p = 2 * $lightness - $q;
             $hK = $hue / 360;
-            $rgb = array_map(function ($tC) use ($p, $q) {
-                if ($tC < 0) {
-                    $tC += 1;
-                } elseif ($tC > 1) {
-                    $tC -= 1;
-                } else {
-                    // Do nothing
-                }
-                return Util::calcFinalColor($tC, $p, $q);
-            }, [$hK + (1 / 3), $hK, $hK - (1 / 3)]);
+            $rgb = array_map(
+                function ($tC) use ($p, $q) {
+                    if ($tC < 0) {
+                        $tC += 1;
+                    } elseif ($tC > 1) {
+                        $tC -= 1;
+                    } else {
+                        // Do nothing
+                    }
+                    return Util::calcFinalColor($tC, $p, $q);
+                },
+                [$hK + (1 / 3), $hK, $hK - (1 / 3)]
+            );
         }
         return $rgb;
     }
@@ -88,9 +91,9 @@ class Util
     /**
      * Calc final RGB color
      *
-     * @param float|int $tC
-     * @param float|int $p
-     * @param float|int $q
+     * @param  float|int $tC
+     * @param  float|int $p
+     * @param  float|int $q
      * @return int
      */
     public static function calcFinalColor($tC, $p, $q): int
@@ -107,11 +110,11 @@ class Util
         }
         return intval(round($color * 255));
     }
-    
+
     /**
      * Convert RGB to HEX
      *
-     * @param array $rgb
+     * @param  array $rgb
      * @return string
      */
     public static function rgb2hex($rgb)

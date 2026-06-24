@@ -1,8 +1,9 @@
 <?php
+
 namespace Vongola\ColorHash\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use \Vongola\ColorHash\Color;
+use Vongola\ColorHash\Color;
 
 class ColorHashFacade extends Facade
 {
