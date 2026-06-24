@@ -1,6 +1,16 @@
 # laravel-color-hash
-![](https://travis-ci.org/vongola12324/laravel-color-hash.svg?branch=master) ![](https://img.shields.io/codecov/c/github/vongola12324/laravel-color-hash.svg) ![](https://img.shields.io/packagist/php-v/vongola12324/laravel-color-hash.svg) ![](https://img.shields.io/packagist/v/vongola12324/laravel-color-hash.svg)  
-ColorHash Library for Laravel 5.0+. Port from [zenozeng/color-hash](https://github.com/zenozeng/color-hash).
+
+![CI](https://github.com/vongola12324/laravel-color-hash/actions/workflows/ci.yml/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/vongola12324/laravel-color-hash/badge.svg?branch=master)](https://coveralls.io/github/vongola12324/laravel-color-hash?branch=master)
+![PHP](https://img.shields.io/packagist/php-v/vongola12324/laravel-color-hash.svg)
+![Version](https://img.shields.io/packagist/v/vongola12324/laravel-color-hash.svg)
+
+ColorHash Library for Laravel 10.0+. Port from [zenozeng/color-hash](https://github.com/zenozeng/color-hash).
+
+## Requirements
+
+- PHP 8.2+
+- Laravel 10.0+
 
 ## Installation
 ```bash
