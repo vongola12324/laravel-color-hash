@@ -18,9 +18,9 @@ class Color
      */
     public function __construct()
     {
-        $this->hasher = 'bkdr';
+        $this->hasher = 'sha256';
         $this->options = [
-            self::HUE_KEY => [['min' => 0, 'max' => 360]],
+            self::HUE_KEY => [],
             self::SATURATION_KEY => [0.35, 0.5, 0.65],
             self::LIGHTNESS_KEY => [0.35, 0.5, 0.65],
         ];
@@ -201,17 +201,20 @@ class Color
     {
         $hash = $this->hash($string);
         // Hue
-        $range = $this->options[self::HUE_KEY][$hash % count($this->options[self::HUE_KEY])];
-        $hueResolution = 727;
-        $hue = intval(
-            (intval($hash / count($this->options[self::HUE_KEY])) % $hueResolution)
-            * ($range['max'] - $range['min']) / $hueResolution + $range['min']
-        );
+        $hueRanges = $this->options[self::HUE_KEY];
+        if (!empty($hueRanges)) {
+            $range = $hueRanges[$hash % count($hueRanges)];
+            $hueResolution = 727;
+            $hue = fmod($hash / count($hueRanges), $hueResolution)
+                * ($range['max'] - $range['min']) / $hueResolution + $range['min'];
+        } else {
+            $hue = $hash % 359; // 359 is prime
+        }
         // Saturation
-        $hash = intval($hash / 360);
+        $hash = (int) ceil($hash / 360);
         $saturation = $this->options[self::SATURATION_KEY][$hash % count($this->options[self::SATURATION_KEY])];
         // Lightness
-        $hash = intval($hash / count($this->options[self::LIGHTNESS_KEY]));
+        $hash = (int) ceil($hash / count($this->options[self::SATURATION_KEY]));
         $lightness = $this->options[self::LIGHTNESS_KEY][$hash % count($this->options[self::LIGHTNESS_KEY])];
 
         return [$hue, $saturation, $lightness];

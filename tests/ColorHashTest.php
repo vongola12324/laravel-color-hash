@@ -17,17 +17,17 @@ class ColorHashTest extends TestCase
 
     public function testHslHash()
     {
-        $this->assertEquals($this->hasher->hsl('Hello World'), [30, 0.65, 0.65]);
+        $this->assertEquals($this->hasher->hsl('Hello World'), [233, 0.5, 0.65]);
     }
 
     public function testRgbHash()
     {
-        $this->assertEquals($this->hasher->rgb('Hello World'), [224, 166, 108]);
+        $this->assertEquals($this->hasher->rgb('Hello World'), [121, 132, 210]);
     }
 
     public function testHexHash()
     {
-        $this->assertEquals($this->hasher->hex('Hello World'), '#e0a66c');
+        $this->assertEquals($this->hasher->hex('Hello World'), '#7984d2');
     }
 
     public function testCustomHue()
@@ -39,11 +39,11 @@ class ColorHashTest extends TestCase
         );
         // Use customHue function
         $customOption = 90;
-        $this->assertEquals($this->hasher->customHue($customOption)->rgb('Hello World'), [166, 224, 108]);
+        $this->assertEquals($this->hasher->customHue($customOption)->rgb('Hello World'), [166, 210, 121]);
         $customOption = ['min' => 90, 'max' => 270];
-        $this->assertEquals($this->hasher->customHue($customOption)->rgb('Hello World'), [137, 224, 108]);
+        $this->assertEquals($this->hasher->customHue($customOption)->rgb('Hello World'), [121, 163, 210]);
         $customOption = [['min' => 30, 'max' => 90], ['min' => 180, 'max' => 210], ['min' => 270, 'max' => 285]];
-        $this->assertEquals($this->hasher->customHue($customOption)->rgb('Hello World'), [166, 108, 224]);
+        $this->assertEquals($this->hasher->customHue($customOption)->rgb('Hello World'), [121, 185, 210]);
     }
 
     public function testCustomLightness()
@@ -55,9 +55,9 @@ class ColorHashTest extends TestCase
         );
         // Use customLightness function
         $customOption = 0.5;
-        $this->assertEquals($this->hasher->customLightness($customOption)->rgb('Hello World'), [210, 128, 45]);
+        $this->assertEquals($this->hasher->customLightness($customOption)->rgb('Hello World'), [64, 79, 191]);
         $customOption = [0.35, 0.5, 0.65];
-        $this->assertEquals($this->hasher->customLightness($customOption)->rgb('Hello World'), [224, 166, 108]);
+        $this->assertEquals($this->hasher->customLightness($customOption)->rgb('Hello World'), [121, 132, 210]);
     }
 
     public function testCustomSaturation()
@@ -67,11 +67,11 @@ class ColorHashTest extends TestCase
             $this->hasher->custom(['saturation' => 0.5])->rgb('Hello World'),
             $this->hasher->customSaturation(0.5)->rgb('Hello World')
         );
-        // Use customLightness function
+        // Use customSaturation function
         $customOption = 0.5;
-        $this->assertEquals($this->hasher->customSaturation($customOption)->rgb('Hello World'), [210, 166, 121]);
+        $this->assertEquals($this->hasher->customSaturation($customOption)->rgb('Hello World'), [64, 79, 191]);
         $customOption = [0.35, 0.5, 0.65];
-        $this->assertEquals($this->hasher->customSaturation($customOption)->rgb('Hello World'), [224, 166, 108]);
+        $this->assertEquals($this->hasher->customSaturation($customOption)->rgb('Hello World'), [121, 132, 210]);
     }
 
     public function testCustomHashFunction()
@@ -89,6 +89,6 @@ class ColorHashTest extends TestCase
             $this->hasher->customHash($hashFunc)->rgb('Hello World')
         );
         // Use customHash function
-        $this->assertEquals($this->hasher->customHash($hashFunc)->rgb('Hello World'), [31, 147, 109]);
+        $this->assertEquals($this->hasher->customHash($hashFunc)->rgb('Hello World'), [172, 83, 122]);
     }
 }

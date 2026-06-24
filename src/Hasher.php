@@ -5,7 +5,7 @@ namespace Vongola\ColorHash;
 class Hasher
 {
     /**
-     * BKDR Hash
+     * BKDR Hash (modified version matching zenozeng/color-hash)
      *
      * @param  string $input
      * @return int
@@ -17,11 +17,29 @@ class Hasher
     public static function bkdr(string $input): int
     {
         $seed = 131;
+        $seed2 = 137;
         $hash = 0;
+        $input .= 'x';
+        // Use JS Number.MAX_SAFE_INTEGER to match zenozeng/color-hash behavior
+        $maxSafeInt = intdiv(9007199254740991, $seed2);
         foreach (str_split($input) as $char) {
-            $hash = ($hash * $seed + ord($char)) & 0x7FFFFFFF;
+            if ($hash > $maxSafeInt) {
+                $hash = intdiv($hash, $seed2);
+            }
+            $hash = $hash * $seed + ord($char);
         }
         return $hash;
+    }
+
+    /**
+     * SHA-256 Hash — first 8 hex digits parsed as unsigned int
+     *
+     * @param  string $input
+     * @return int
+     */
+    public static function sha256(string $input): int
+    {
+        return (int) hexdec(substr(hash('sha256', $input), 0, 8));
     }
 
     /**

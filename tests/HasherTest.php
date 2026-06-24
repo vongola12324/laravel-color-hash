@@ -10,7 +10,12 @@ class HasherTest extends TestCase
     public function testBKDRHash()
     {
         $this->assertEquals(Hasher::bkdr('Test'), Hasher::BKDRHash('Test'));
-        $this->assertEquals(Hasher::bkdr('Test'), 190588086);
+        $this->assertEquals(Hasher::bkdr('Test'), 24967039386);
+    }
+
+    public function testSha256Hash()
+    {
+        $this->assertEquals(Hasher::sha256('Test'), (int) hexdec(substr(hash('sha256', 'Test'), 0, 8)));
     }
 
     public function testAPHash()

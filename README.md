@@ -20,13 +20,13 @@ composer require vongola12324/laravel-color-hash
 ### Basic
 ```php
 // in HSL, Hue ∈ [0, 360), Saturation ∈ [0, 1], Lightness ∈ [0, 1]
-ColorHash::hsl('Hello World'); // [185, 0.35, 0.35]
+ColorHash::hsl('Hello World'); // [233, 0.5, 0.65]
 
 // in RGB, R, G, B ∈ [0, 255]
-ColorHash::rgb('Hello World'); // [58, 115, 120]
+ColorHash::rgb('Hello World'); // [121, 132, 210]
 
 // in HEX
-ColorHash::hex('Hello World'); // '#3a7378'
+ColorHash::hex('Hello World'); // '#7984d2'
 ```  
 ### Custom
 ```php
@@ -38,20 +38,20 @@ $hashFunc = function ($string) {
     }
     return $hash;
 }
-ColorHash::customHash($hashFunc)->rgb('Hello World'); // [31, 147, 109]
+ColorHash::customHash($hashFunc)->rgb('Hello World'); // [172, 83, 122]
 
 // Custom Hue
-ColorHash::customHue(90)->rgb('Hello World'); // [89, 120, 58]
-ColorHash::customHue(['min' => 90, 'max' => 270])->rgb('Hello World'); // [58, 118, 120]
-ColorHash::customHue([['min' => 30, 'max' => 90], ['min' => 180, 'max' => 210], ['min' => 270, 'max' => 285]])->rgb('Hello World'); // [120, 100, 58]
+ColorHash::customHue(90)->rgb('Hello World'); // [166, 210, 121]
+ColorHash::customHue(['min' => 90, 'max' => 270])->rgb('Hello World'); // [121, 163, 210]
+ColorHash::customHue([['min' => 30, 'max' => 90], ['min' => 180, 'max' => 210], ['min' => 270, 'max' => 285]])->rgb('Hello World'); // [121, 185, 210]
 
 // Custom Saturation
-ColorHash::customSaturation(0.5)->rgb('Hello World'); // [45, 126, 134]
-ColorHash::customSaturation([0.35, 0.5, 0.65])->rgb('Hello World'); // [58, 115, 120]
+ColorHash::customSaturation(0.5)->rgb('Hello World'); // [64, 79, 191]
+ColorHash::customSaturation([0.35, 0.5, 0.65])->rgb('Hello World'); // [121, 132, 210]
 
 // Custom Lightness
-ColorHash::customLightness(0.5)->rgb('Hello World'); // [83, 165, 172]
-ColorHash::customLightness([0.35, 0.5, 0.65])->rgb('Hello World'); // [58, 115, 120]
+ColorHash::customLightness(0.5)->rgb('Hello World'); // [64, 79, 191]
+ColorHash::customLightness([0.35, 0.5, 0.65])->rgb('Hello World'); // [121, 132, 210]
 ```
 
 All customXXX method can be used in a single custom method by passing an option array, for example:
