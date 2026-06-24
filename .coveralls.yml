@@ -1,0 +1,3 @@
+service_name: github
+coverage_clover: coverage/phpunit.coverage.xml
+json_path: coverage/coveralls-upload.json

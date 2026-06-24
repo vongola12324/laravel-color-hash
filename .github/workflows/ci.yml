@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3', '8.4', '8.5']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ matrix.php == '8.5' && 'xdebug' || '' }}
+          coverage: ${{ matrix.php == '8.5' && 'xdebug' || 'none' }}
+
+      - name: Cache Composer packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.composer/cache
+          key: composer-php${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-php${{ matrix.php }}-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Run tests
+        run: vendor/bin/phpunit $COVERAGE_FLAGS
+        env:
+          COVERAGE_FLAGS: ${{ matrix.php == '8.5' && '--coverage-clover coverage/phpunit.coverage.xml' || '' }}
+
+      - name: Upload coverage to Coveralls
+        if: matrix.php == '8.5' && github.event_name != 'pull_request'
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mkdir -p coverage && vendor/bin/php-coveralls -v
+
+  analyse:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+
+      - name: Cache Composer packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.composer/cache
+          key: composer-analyse-${{ hashFiles('**/composer.lock') }}
+          restore-keys: composer-analyse-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse
+
+      - name: PHP CodeSniffer
+        run: vendor/bin/phpcs src/

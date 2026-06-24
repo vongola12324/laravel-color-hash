@@ -7,12 +7,12 @@ class Util
     /**
      * Check numeric is between max value and max value
      *
-     * @param float|int $target
-     * @param float|int $min
-     * @param float|int $max
+     * @param  mixed     $target
+     * @param  float|int $min
+     * @param  float|int $max
      * @return bool
      */
-    public static function isBetween($target, $min, $max)
+    public static function isBetween($target, $min, $max): bool
     {
         return $target >= $min && $target <= $max;
     }
@@ -20,10 +20,10 @@ class Util
     /**
      * Check Hue value is between 0 - 360
      *
-     * @param float|int $hue
+     * @param  mixed $hue
      * @return bool
      */
-    public static function isValidHue($hue)
+    public static function isValidHue($hue): bool
     {
         return is_numeric($hue) && self::isBetween($hue, 0, 360);
     }
@@ -31,21 +31,21 @@ class Util
     /**
      * Check Saturation value is between 0 - 1
      *
-     * @param float|int $saturation
+     * @param  mixed $saturation
      * @return bool
      */
-    public static function isValidSaturation($saturation)
+    public static function isValidSaturation($saturation): bool
     {
-        return is_numeric($saturation) &&self::isBetween($saturation, 0, 1);
+        return is_numeric($saturation) && self::isBetween($saturation, 0, 1);
     }
 
     /**
      * Check Lightness value is between 0 - 1
      *
-     * @param float|int $saturation
+     * @param  mixed $lightness
      * @return bool
      */
-    public static function isValidLightness($lightness)
+    public static function isValidLightness($lightness): bool
     {
         return is_numeric($lightness) && self::isBetween($lightness, 0, 1);
     }
@@ -53,11 +53,11 @@ class Util
     /**
      * Convert HSL to RGB
      *
-     * @see {@link http://zh.wikipedia.org/wiki/HSL和HSV色彩空间} for further information.
-     * @param array $hsl
-     * @return void
+     * @see    {@link http://zh.wikipedia.org/wiki/HSL和HSV色彩空间} for further information.
+     * @param  array $hsl
+     * @return array
      */
-    public static function hsl2rgb($hsl)
+    public static function hsl2rgb($hsl): array
     {
         [$hue, $saturation , $lightness] = $hsl;
         $rgb = [];
@@ -71,16 +71,19 @@ class Util
             }
             $p = 2 * $lightness - $q;
             $hK = $hue / 360;
-            $rgb = array_map(function ($tC) use ($p, $q) {
-                if ($tC < 0) {
-                    $tC += 1;
-                } elseif ($tC > 1) {
-                    $tC -= 1;
-                } else {
-                    // Do nothing
-                }
-                return Util::calcFinalColor($tC, $p, $q);
-            }, [$hK + (1 / 3), $hK, $hK - (1 / 3)]);
+            $rgb = array_map(
+                function ($tC) use ($p, $q) {
+                    if ($tC < 0) {
+                        $tC += 1;
+                    } elseif ($tC > 1) {
+                        $tC -= 1;
+                    } else {
+                        // Do nothing
+                    }
+                    return Util::calcFinalColor($tC, $p, $q);
+                },
+                [$hK + (1 / 3), $hK, $hK - (1 / 3)]
+            );
         }
         return $rgb;
     }
@@ -88,12 +91,12 @@ class Util
     /**
      * Calc final RGB color
      *
-     * @param float|int $tC
-     * @param float|int $p
-     * @param float|int $q
-     * @return void
+     * @param  float|int $tC
+     * @param  float|int $p
+     * @param  float|int $q
+     * @return int
      */
-    public static function calcFinalColor($tC, $p, $q)
+    public static function calcFinalColor($tC, $p, $q): int
     {
         $color = 0;
         if ($tC < (1 / 6)) {
@@ -107,11 +110,11 @@ class Util
         }
         return intval(round($color * 255));
     }
-    
+
     /**
      * Convert RGB to HEX
      *
-     * @param array $rgb
+     * @param  array $rgb
      * @return string
      */
     public static function rgb2hex($rgb)
