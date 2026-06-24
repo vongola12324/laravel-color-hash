@@ -7,12 +7,12 @@ class Util
     /**
      * Check numeric is between max value and max value
      *
-     * @param float|int $target
+     * @param mixed $target
      * @param float|int $min
      * @param float|int $max
      * @return bool
      */
-    public static function isBetween($target, $min, $max)
+    public static function isBetween($target, $min, $max): bool
     {
         return $target >= $min && $target <= $max;
     }
@@ -20,10 +20,10 @@ class Util
     /**
      * Check Hue value is between 0 - 360
      *
-     * @param float|int $hue
+     * @param mixed $hue
      * @return bool
      */
-    public static function isValidHue($hue)
+    public static function isValidHue($hue): bool
     {
         return is_numeric($hue) && self::isBetween($hue, 0, 360);
     }
@@ -31,21 +31,21 @@ class Util
     /**
      * Check Saturation value is between 0 - 1
      *
-     * @param float|int $saturation
+     * @param mixed $saturation
      * @return bool
      */
-    public static function isValidSaturation($saturation)
+    public static function isValidSaturation($saturation): bool
     {
-        return is_numeric($saturation) &&self::isBetween($saturation, 0, 1);
+        return is_numeric($saturation) && self::isBetween($saturation, 0, 1);
     }
 
     /**
      * Check Lightness value is between 0 - 1
      *
-     * @param float|int $saturation
+     * @param mixed $lightness
      * @return bool
      */
-    public static function isValidLightness($lightness)
+    public static function isValidLightness($lightness): bool
     {
         return is_numeric($lightness) && self::isBetween($lightness, 0, 1);
     }
@@ -55,9 +55,9 @@ class Util
      *
      * @see {@link http://zh.wikipedia.org/wiki/HSL和HSV色彩空间} for further information.
      * @param array $hsl
-     * @return void
+     * @return array
      */
-    public static function hsl2rgb($hsl)
+    public static function hsl2rgb($hsl): array
     {
         [$hue, $saturation , $lightness] = $hsl;
         $rgb = [];
@@ -91,9 +91,9 @@ class Util
      * @param float|int $tC
      * @param float|int $p
      * @param float|int $q
-     * @return void
+     * @return int
      */
-    public static function calcFinalColor($tC, $p, $q)
+    public static function calcFinalColor($tC, $p, $q): int
     {
         $color = 0;
         if ($tC < (1 / 6)) {

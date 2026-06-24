@@ -7,7 +7,7 @@ class Hasher
     /**
      * BKDR Hash
      *
-     * @param string $string
+     * @param string $input
      * @return int
      */
     public static function BKDRHash(string $input): int

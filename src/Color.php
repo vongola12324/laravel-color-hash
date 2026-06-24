@@ -79,7 +79,7 @@ class Color
         $newHue = [];
         if (is_numeric($hue)) {
             array_push($newHue, ['min' => $hue, 'max' => $hue]);
-        } elseif (is_array($hue) && array_key_exists('min', $hue) && array_key_exists('max', $hue)) {
+        } elseif (array_key_exists('min', $hue) && array_key_exists('max', $hue)) {
             array_push($newHue, ['min' => $hue['min'], 'max' => $hue['max']]);
         } elseif (!empty($hue) && is_array($hue[0])) {
             $newHue = $hue;
@@ -170,18 +170,18 @@ class Color
      * Hash string
      *
      * @param string $string
-     * @return string
+     * @return int
      */
-    private function hash(string $string)
+    private function hash(string $string): int
     {
         if (is_string($this->hasher)) {
             if (method_exists(Hasher::class, $this->hasher)) {
-                $hash = call_user_func([Hasher::class, $this->hasher], $string);
+                $hash = (int) call_user_func([Hasher::class, $this->hasher], $string);
             } else {
                 $hash = Hasher::bkdr($string);
             }
         } elseif (is_callable($this->hasher)) {
-            $hash = call_user_func($this->hasher, $string);
+            $hash = (int) call_user_func($this->hasher, $string);
         } else {
             throw new InvalidArgumentException('Can not execute hash function.');
         }
@@ -199,7 +199,7 @@ class Color
         $hash = $this->hash($string);
         // Hue
         $range = $this->options[self::HUE_KEY][$hash % count($this->options[self::HUE_KEY])];
-        $hueResolution = "727";
+        $hueResolution = 727;
         $hue = intval((($hash / count($this->options[self::HUE_KEY])) % $hueResolution)
                * ($range['max'] - $range['min']) / $hueResolution + $range['min']);
         // Saturation
