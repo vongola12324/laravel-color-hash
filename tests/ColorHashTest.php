@@ -91,4 +91,70 @@ class ColorHashTest extends TestCase
         // Use customHash function
         $this->assertEquals($this->hasher->customHash($hashFunc)->rgb('Hello World'), [172, 83, 122]);
     }
+
+    public function testCustomHueThrowsForInvalidInput()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->hasher->customHue([1, 2, 3]);
+    }
+
+    public function testCustomHueThrowsForInvalidHueValue()
+    {
+        // exercises the validation loop skip (isValidHue fails) → empty options → exception
+        $this->expectException(\InvalidArgumentException::class);
+        $this->hasher->customHue(['min' => 90, 'max' => -1]);
+    }
+
+    public function testCustomSaturationThrowsForInvalidInput()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->hasher->customSaturation('invalid');
+    }
+
+    public function testCustomSaturationIgnoresInvalidArrayElements()
+    {
+        // 2.0 fails isValidSaturation → ignored; 0.5 stays → no exception
+        $result = $this->hasher->customSaturation([0.5, 2.0])->rgb('Hello World');
+        $this->assertEquals($this->hasher->customSaturation([0.5])->rgb('Hello World'), $result);
+    }
+
+    public function testCustomSaturationThrowsForArrayOfAllInvalidValues()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->hasher->customSaturation([2.0]);
+    }
+
+    public function testCustomLightnessThrowsForInvalidInput()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->hasher->customLightness('invalid');
+    }
+
+    public function testCustomLightnessIgnoresInvalidArrayElements()
+    {
+        // 2.0 fails isValidLightness → ignored; 0.5 stays → no exception
+        $result = $this->hasher->customLightness([0.5, 2.0])->rgb('Hello World');
+        $this->assertEquals($this->hasher->customLightness([0.5])->rgb('Hello World'), $result);
+    }
+
+    public function testCustomLightnessThrowsForArrayOfAllInvalidValues()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->hasher->customLightness([2.0]);
+    }
+
+    public function testCustomHashFallsBackToBkdrForUnknownMethodName()
+    {
+        // unknown method name → falls back to Hasher::bkdr()
+        $this->assertEquals(
+            $this->hasher->customHash('nonexistent')->rgb('Hello World'),
+            $this->hasher->customHash('bkdr')->rgb('Hello World')
+        );
+    }
+
+    public function testCustomHashThrowsForNonCallableNonString()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->hasher->customHash(123)->rgb('Hello World');
+    }
 }

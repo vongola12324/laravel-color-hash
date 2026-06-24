@@ -11,5 +11,9 @@
         <include>
             <directory suffix=".php">./src</directory>
         </include>
+        <exclude>
+            <file>./src/ColorHashServiceProvider.php</file>
+            <directory suffix=".php">./src/Facades</directory>
+        </exclude>
     </source>
 </phpunit>
