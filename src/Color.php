@@ -175,8 +175,8 @@ class Color
     private function hash(string $string)
     {
         if (is_string($this->hasher)) {
-            if (method_exists('Hasher', $this->hasher)) {
-                $hash = call_user_func(['Hasher', $this->hasher], $string);
+            if (method_exists(Hasher::class, $this->hasher)) {
+                $hash = call_user_func([Hasher::class, $this->hasher], $string);
             } else {
                 $hash = Hasher::bkdr($string);
             }
